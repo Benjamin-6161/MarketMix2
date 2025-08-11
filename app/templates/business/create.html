@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Create Business</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.category.label }} {{ form.category() }}
+        {{ form.country.label }} {{ form.country() }}
+        {{ form.state.label }} {{ form.state() }}
+        {{ form.city.label }} {{ form.city() }}
+        {{ form.description.label }} {{ form.description() }}
+        {{ form.submit() }}
+    </form>
+{% endblock %}

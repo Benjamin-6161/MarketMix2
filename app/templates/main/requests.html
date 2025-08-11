@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Requests</h2>
+    {% for request in requests %}
+      <div class="post">
+        <p>{{ request.created_at }}</p>
+        <h3>{{ request_users[request.id].username }}</h3>
+        <h4>{{ request.category }}</h4>
+        <p>{{ request.content }}</p>
+        <a href="{{ url_for('request.view_request', request_id=request.id) }}">View Request</a>
+      </div>
+    {% endfor %}
+{% endblock %}

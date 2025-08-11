@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Request Detail</h1>
+  <h2><a href="{{request.user_id.username}}"></a></h2>
+  <p>Category: {{ request.category }}</p>
+  <p>Description: {{ request.content }}</p>
+  <p>Created At: {{ request.created_at }}</p>
+{% if current_user.id == request.user_id %}
+  <a href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit Request</a>
+  <a href="{{ url_for('request.delete_request', request_id=request.id) }}">Delete Request</a>
+{% else %}
+  <a href="{{ url_for('message.view_conversation', user_id=request.user_id) }}">Respond</a>
+{% endif %}
+  <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+{% endblock %}

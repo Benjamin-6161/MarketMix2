@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Businesses</h2>
+    {% for business in businesses %}
+      <div class="post">
+        <h3><a href="{{ url_for('business.business_profile', business_id=business.id) }}">{{business.business_name}}</a></h3>
+        <h4>{{ business.decription }}</h4>
+        <p>Location: {{business.state}}, {{business.country}}</p>
+      </div>
+    {% endfor %}
+{% endblock %}

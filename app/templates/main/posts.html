@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Posts</h2>
+    {% for post in posts %}
+      <div class="post">
+        <p>{{ post.created_at }}</p>
+        <h3><a href="{{ url_for('business.business_profile', business_id=post.business_id) }}">{{ post.business.business_name }}</a></h3>
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.content }}</p>
+        <p>Likes: {{ post.engagements | selectattr('engagement_type', 'equalto', 'like') | list | length }}</p>
+        <p>Comments: {{ post.engagements | selectattr('engagement_type', 'equalto', 'comment') | list | length }}</p>
+        <p><a href="{{ url_for('post.post_detail', post_id=post.id) }}">View Post</a></p>
+      </div>
+    {% endfor %}
+{% endblock %}

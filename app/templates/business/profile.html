@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Business Profile</h1>
+  <h2>{{ business.business_name }}</h2>
+  <p>Category: {{ business.category }}</p>
+  <p>Description: {{ business.description }}</p>
+  <h2>Posts</h2>
+    {% for post in business.posts %}
+    <div class="post">
+      <p>{{post.created_at}}</p>
+      <h3>{{post.title}}</h3>
+      <p>{{post.content}}</p>
+      <a href="{{ url_for('post.post_detail', post_id=post.id) }}">View details</a>
+    </div>
+    {% endfor %}
+  <h2>Reviews</h2>
+  {% for review in reviews %}
+  <div class="post">
+    <h3>{{ user.username }}</h3>
+    <p>{{ review.created_at }}</p>
+    <p>Rating: {{ review.rating }}</p>
+    <p>Review: {{ review.review }}</p>
+    {% if review.user_id == current_user.id %}
+    <a href="{{ url_for('review.edit_review', review_id=review.id) }}">Edit Review</a>
+    <a href="{{ url_for('review.delete_review', review_id=review.id) }}">Delete Review</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% if current_user.id != business.user_id %}
+  <p><a href="{{ url_for('message.view_conversation', user_id=business.user_id) }}">Message Business</a></p>
+      {% if current_user and not has_reviewed %}
+      <p><a href="{{ url_for('review.create_review', business_id=business.id) }}">Leave a Review</a></p>
+      {% endif %}
+  {% else %}
+  <p><a href="{{ url_for('business.create_post', business_id=business.id) }}">Create Post</a></p>
+  <p><a href="{{ url_for('business.edit_business', business_id=business.id) }}">Edit Business</a></p>
+  <p><a href="{{ url_for('business.delete_business', business_id=business.id) }}">Delete Business</a></p>
+  {% endif %}
+  <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+{% endblock %}
