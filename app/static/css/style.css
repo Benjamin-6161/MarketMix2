@@ -1,10 +1,17 @@
 header {
-  text-align: center;
+  font-size: 45px;
+  text-shadow: 2px 2px 4px #000;
   background-color: blueviolet;
   color: black;
   font-family: sans-serif;
-  padding: 1em;
-  justify-content: center
+  padding: 0em 1em 0em 0em;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 60px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 body {
@@ -18,7 +25,13 @@ nav {
   color: #fff;
   padding: 1em;
   text-align: center;
-  overflow: hidden; /* Add this to prevent content from overflowing */
+  position: fixed;
+  top:60px;
+  left: 0;
+  height: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  /*overflow: hidden;  Add this to prevent content from overflowing */
 }
 
 nav ul {
@@ -31,7 +44,8 @@ nav ul {
 }
 
 nav li {
-  margin-right: 20px;
+  
+  margin-right: 15px;
   margin-bottom: 10px; /* Add some space between items on smaller screens */
 }
 
@@ -45,7 +59,7 @@ nav a:hover {
 }
 
 .content {
-  padding: 2em;
+  padding: 100px 2em 2em 2em;
 }
 
 .post {
@@ -71,5 +85,3 @@ nav a:hover {
     margin-right: 0; /* Remove right margin on smaller screens */
   }
 }
-
-
