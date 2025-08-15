@@ -1,15 +1,45 @@
 from flask import Blueprint, render_template, redirect, url_for
 from app.models.post import Post
+from app.models.engagement import Engagement
 from app import db
 from app.forms import PostForm
+from app.forms import EngagementForm
 from flask_login import login_required, current_user
 
 post = Blueprint('post', __name__)
 
-@post.route('/<int:post_id>')
+@post.route('/<int:post_id>', methods=['GET', 'POST'])
 def post_detail(post_id):
     post = Post.query.get(post_id)
-    return render_template('post/detail.html', post=post)
+    form = EngagementForm()
+    if form.validate_on_submit():
+        engagement = Engagement(
+            post_id=post_id,
+            user_id=current_user.id,
+            engagement_type='comment',
+            comment=form.comment.data
+        )
+        db.session.add(engagement)
+        db.session.commit()
+        return redirect(url_for('post.post_detail', post_id=post_id))
+    return render_template('post/detail.html', post=post, form=form)
+    
+@post.route('/<int:post_id>/like')
+@login_required
+def like_post(post_id):
+    existing_engagement = Engagement.query.filter_by(post_id=post_id, user_id=current_user.id, engagement_type='like').first()
+    if existing_engagement:
+        db.session.delete(existing_engagement)
+    else:
+        engagement = Engagement(
+            post_id=post_id,
+            user_id=current_user.id,
+            engagement_type='like'
+        )
+        db.session.add(engagement)
+
+    db.session.commit()
+    return redirect(url_for('post.post_detail', post_id=post_id))
 
 @post.route('/<int:post_id>/edit', methods=['GET', 'POST'])
 @login_required
