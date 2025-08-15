@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, NumberRange
 
 class LoginForm(FlaskForm):
@@ -54,3 +54,8 @@ class RequestForm(FlaskForm):
     category = SelectField('Category', choices=[('service', 'Service'), ('business', 'Business')], validators=[DataRequired()])
     content = TextAreaField('Request Content', validators=[DataRequired()])
     submit = SubmitField('Create Request')
+    
+class EngagementForm(FlaskForm):
+    engagement_type = HiddenField('Engagement Type')
+    comment = TextAreaField('Comment')
+    submit = SubmitField('Comment')
