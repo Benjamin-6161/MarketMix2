@@ -1,12 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Post Detail</h1>
-  <h2>{{ post.business.business_name }}</h2>
-  <h3>{{ post.title }}</h3>
-  <p>{{ post.content }}</p>
-  <p>Likes: {{ post.engagements | selectattr('engagement_type', 'equalto', 'like') | list | length }}</p>
-  <p>Comments: {{ post.engagements | selectattr('engagement_type', 'equalto', 'comment') | list | length }}</p>
-  <p><a href="{{ url_for('business.business_profile', business_id=post.business.id) }}">View Business Profile</a></p>
-  <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+<h1>Post Detail</h1>
+<h2>{{ post.business.business }}</h2>
+<h3>{{ post.title }}</h3>
+<p>{{ post.content }}</p>
+
+<p>Likes: {{ post.engagements | selectattr('engagement_type', 'equalto', 'like') | list | length }}</p>
+<p>Comments: {{ post.engagements | selectattr('engagement_type', 'equalto', 'comment') | list | length }}</p>
+
+<a href="{{ url_for('post.like_post', post_id=post.id) }}">Like</a>
+
+<h2>Comments</h2>
+{% for engagement in post.engagements %}
+    {% if engagement.engagement_type == 'comment' %}
+  <div class="post">
+      <h3>{{ engagement.user.username }}</h3> 
+      <p>{{ engagement.comment }}</p>
+    {% endif %}
+  </div>
+{% endfor %}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.comment() }}
+    {{ form.submit() }}
+</form>
+
+    <p><a href="{{ url_for('business.business_profile', business_id=post.business.id) }}">View Business Profile</a></p>
+    <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
 {% endblock %}
