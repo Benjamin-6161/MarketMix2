@@ -59,8 +59,19 @@ def edit_post(post_id):
 @login_required
 def delete_post(post_id):
     post = Post.query.get(post_id)
-    if post.business.user_id != current_user.id:
+    if post is None:
+        return "Post not found", 404
+    if post.business is not None and post.business.user_id != current_user.id:
         return redirect(url_for('main.homepage'))
     db.session.delete(post)
     db.session.commit()
     return redirect(url_for('business.business_posts', business_id=post.business_id))
+    
+@post.route('/<int:post_id>/<int:engagement_id>/delete')
+@login_required
+def delete_comment(post_id, engagement_id):
+    comment = Engagement.query.get(engagement_id)
+    if comment and comment.user_id == current_user.id and comment.engagement_type == "comment":
+        db.session.delete(comment)
+        db.session.commit()
+    return redirect(url_for('post.post_detail', post_id = post_id))
