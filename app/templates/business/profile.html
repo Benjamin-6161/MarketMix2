@@ -23,7 +23,7 @@
     <p>Review: {{ review.review }}</p>
     {% if review.user_id == current_user.id %}
     <a href="{{ url_for('review.edit_review', review_id=review.id) }}">Edit Review</a>
-    <a href="{{ url_for('review.delete_review', review_id=review.id) }}">Delete Review</a>
+    <a href="{{ url_for('review.delete_review', review_id=review.id) }}" onclick="return confirm('Confirm delete')">Delete Review</a>
     {% endif %}
   </div>
   {% endfor %}
@@ -35,7 +35,7 @@
   {% else %}
   <p><a href="{{ url_for('business.create_post', business_id=business.id) }}">Create Post</a></p>
   <p><a href="{{ url_for('business.edit_business', business_id=business.id) }}">Edit Business</a></p>
-  <p><a href="{{ url_for('business.delete_business', business_id=business.id) }}">Delete Business</a></p>
+  <p><a href="{{ url_for('business.delete_business', business_id=business.id) }}" onclick="return confirm('Confirm delete')">Delete Business</a></p>
   {% endif %}
   <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
 {% endblock %}
