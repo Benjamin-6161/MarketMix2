@@ -14,11 +14,14 @@
 <h2>Comments</h2>
 {% for engagement in post.engagements %}
     {% if engagement.engagement_type == 'comment' %}
-  <div class="post">
+      <div class="post">
       <h3>{{ engagement.user.username }}</h3> 
       <p>{{ engagement.comment }}</p>
+      {% if current_user.id == engagement.user_id %}
+      <a href="{{ url_for('post.delete_comment',post_id=post.id, engagement_id=engagement.id) }}" onclick="return confirm('Confirm delete')">Delete Comment</a>
+      {% endif %}
+      </div>
     {% endif %}
-  </div>
 {% endfor %}
 
 <form method="POST">
@@ -27,6 +30,11 @@
     {{ form.submit() }}
 </form>
 
-    <p><a href="{{ url_for('business.business_profile', business_id=post.business.id) }}">View Business Profile</a></p>
-    <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+{% if current_user.id == post.user_id %}
+<a href="{{ url_for('post.edit_post', post_id=post_id) }}">Edit Post</a>
+<a href="{{ url_for('post.delete_post', post_id=post_id) }}" onclick="return confirm('Confirm delete')">Delete Post</a>
+{% endif %}
+
+<p><a href="{{ url_for('business.business_profile', business_id=post.business.id) }}">View Business Profile</a></p>
+<p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
 {% endblock %}
