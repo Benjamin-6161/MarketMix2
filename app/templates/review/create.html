@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Create Review</h1>
+<div class="container">
+  <h1 style="font-size: 80px; text-align:center;">Create Review</h1>
   <form method="POST">
     {{ form.hidden_tag() }}
-    {{ form.rating.label }} {{ form.rating() }}
-    {{ form.review.label }} {{ form.review() }}
-    <input type="submit" value="Submit Review">
+    {{ form.rating.label(class="form-label") }} {{ form.rating(class="form-input") }}<br>
+    {{ form.review.label(class="form-label") }} {{ form.review(class="form-input") }}<br>
+    {{ form.submit(class="form-submit") }}
   </form>
-  <p><a href="{{ url_for('business.business_profile', business_id=business.id) }}">View Business Profile</a></p>
-  <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+  <p class="text"><a href="{{ url_for('business.business_profile', business_id=business.id) }}">View Business Profile</a></p>
+  
+</div>
 {% endblock %}
