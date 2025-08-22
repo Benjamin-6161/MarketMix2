@@ -1,16 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Request Detail</h1>
-  <h2><a href="{{request.user_id.username}}"></a></h2>
-  <p>Category: {{ request.category }}</p>
-  <p>Description: {{ request.content }}</p>
-  <p>Created At: {{ request.created_at }}</p>
+<div class="text">
+<h1 style="font-size: 80px; margin-bottom: 0%; text-align:center;">Request Detail</h1>
+<div style="margin: 2% 0%; width: 100%;" class="container">
+  <img src="{{ url_for('static', filename='images/profile_photos/' + request.user.image_filename) if request.user.image_filename else app_config['DEFAULT_PROFILE_PHOTO_URL'] }}" alt="Profile Image" class="profile-image" onclick="enlargeImage(this.src)">
+  <h2 style="display: inline-block; font-size: 45px;">{{user.username}}</h2><hr>
+  <h3 style="font-size: 45px; margin-top: 8%;">Category: {{ request.category }}</h3>
+  <p style="font-size: 33px;" class="text">{{ request.content }}</p>
+  {% if request.image_filename %}
+    <img src="{{ url_for('static', filename='images/requests/' + request.image_filename) }}" alt="Request Image" class="post-image" onclick="enlargeImage(this.src)">
+  {% endif %}
+  <p style="font-size: 17px;">{{ request.created_at }}</p>
+</div>
 {% if current_user.id == request.user_id %}
-  <a href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit Request</a>
-  <a href="{{ url_for('request.delete_request', request_id=request.id) }}">Delete Request</a>
+<p style="font-size: 28px; margin: 3% 0px;"><a href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit Request</a></p>  
+<p style="font-size: 28px;"><a href="{{ url_for('request.delete_request', request_id=request.id) }}">Delete Request</a></p>  
 {% else %}
-  <a href="{{ url_for('message.view_conversation', user_id=request.user_id) }}">Respond</a>
+  <p style="font-size: 28px;"><a href="{{ url_for('message.view_conversation', user_id=request.user_id) }}">Respond</a></p>  
 {% endif %}
-  <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+</div>
 {% endblock %}
