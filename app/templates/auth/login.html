@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Login</h1>
+<div class="container">
+  <h1 style="font-size: 80px; text-align:center;">Login</h1>
   <form method="POST">
     {{ form.hidden_tag() }}
-    {{ form.email.label }} {{ form.email() }}
-    {{ form.password.label }} {{ form.password() }}
-    <input type="submit" value="Login">
+    {{ form.email.label(class="form-label") }}<br>
+    {{ form.email(class="form-input") }}<br>
+    {{ form.password.label(class="form-label") }}<br>
+    {{ form.password(class="form-input") }}<br>
+    {{ form.submit(class="form-submit") }}
   </form>
-  <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register</a></p>
-  <p>Forgot password? <a href="{{ url_for('auth.forgot_password') }}">Reset</a></p>
-  <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+</div>
+  <p class="text">Don't have an account? <a href="{{ url_for('auth.register') }}">Register</a></p>
+  <p class="text">Forgot password? <a href="{{ url_for('auth.forgot_password') }}">Reset</a></p>
 {% endblock %}
