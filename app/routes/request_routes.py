@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, current_app
 from app.models.request import Request
+from app.models.user import User
 from app import db
+from app.uploads import request_images
 from app.forms import RequestForm
 from flask_login import login_required, current_user
 
@@ -11,7 +13,14 @@ request = Blueprint('request', __name__)
 def create_request():
     form = RequestForm()
     if form.validate_on_submit():
-        new_request = Request(category=form.category.data, content=form.content.data, user_id=current_user.id)
+        new_request = Request(
+            category=form.category.data,
+            content=form.content.data,
+            user_id=current_user.id
+        )
+        if form.image.data:
+            filename = request_images.save(form.image.data)
+            new_request.image_filename = filename
         db.session.add(new_request)
         db.session.commit()
         return redirect(url_for('main.homepage'))
@@ -21,7 +30,7 @@ def create_request():
 @login_required
 def view_request(request_id):
     request_obj = Request.query.get(request_id)
-    return render_template('request/detail.html', request=request_obj)
+    return render_template('request/detail.html', request=request_obj, user=request_obj.user, app_config=current_app.config)
 
 @request.route('/<int:request_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -46,3 +55,4 @@ def delete_request(request_id):
     db.session.delete(request_obj)
     db.session.commit()
     return redirect(url_for('main.homepage'))
+    
