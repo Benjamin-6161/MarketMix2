@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 style="font-size: 80px; text-align:center;">Edit Profile</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.username.label(class="form-label") }}<br> {{ form.username(class="form-input") }}<br>
+        {{ form.email.label(class="form-label") }} <br>{{ form.email(class="form-input") }}<br>
+        {{ form.image.label(class="form-label") }}<br> {{ form.image(class="form-input") }}<br>
+        {% if user.image_filename %}
+          <img src="{{ url_for('static', filename='images/profile_photo/' + user.image_filename) }}" alt="profile image" style="width: 80%; margin-left: 10%;" class="post-image" onclick="enlargeImage(this.src)">
+        {% endif %}
+        {{ form.submit(class="form-submit") }}
+    </form>
+</div>
+{% endblock %}
