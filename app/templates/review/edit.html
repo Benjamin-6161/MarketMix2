@@ -1,19 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Edit Review</h1>
+<div class="container">
+  <h1 style="font-size: 80px; text-align:center;">Edit Review</h1>
   <form method="POST">
     {{ form.hidden_tag() }}
-    <p>
-      {{ form.rating.label }}<br>
-      {{ form.rating() }}
-    </p>
-    <p>
-      {{ form.review.label }}<br>
-      {{ form.review() }}
-    </p>
-    <p>
-      {{ form.submit() }}
-    </p>
+    {{ form.rating.label(class="form-label") }}<br>{{ form.rating(class="form-input") }}<br>
+    {{ form.review.label(class="form-label") }}<br>{{ form.review(class="form-input") }}<br>
+    {{ form.submit(class="form-submit") }}
   </form>
+</div>
 {% endblock %}
