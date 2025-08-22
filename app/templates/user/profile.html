@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Profile</h1>
-  <h2>{{ user.username }}</h2>
-  <p>Email: {{ user.email }}</p>
-  <p>User Type: {{ user.user_type }}</p>
+<div class="text">
+<h1 style="font-size: px; text-align:center;">Profile</h1>
+<div class="user-profile">
+  <img src="{{ url_for('static', filename='images/profile_photos/' + user.image_filename) if user.image_filename else app_config['DEFAULT_PROFILE_PHOTO_URL'] }}" alt="Profile Image" class="profile" onclick="enlargeImage(this.src)">
+  <div class="user-info">
+  <h2 style="font-size:49px">{{ user.username }}</h2>
+  <p class="text">{{ user.email }}</p>
+  <p class="text">{{ user.user_type }}</p>
+  {% if current_user.id == user.id %}
+    <p class="text"><a href="{{ url_for('user.edit_profile', user_id=user.id) }}">Edit Profile</a></p>
+  {% endif %}
   {% if user.user_type == 'vendor' %}
     <h2>Business</h2>
       {% if not has_business %}
@@ -13,6 +20,25 @@
       <h3><a href="{{ url_for('business.business_profile', business_id=business.id) }}">{{ business.business_name }}</a></li>
       {% endif %}
   {% endif %}
-  <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
-  <p><a href="{{ url_for('message.inbox') }}">Inbox</a></p>
+  </div>
+</div>
+<div  style="margin-left: 2%;">
+<h2 >Requests</h2>
+{% for request in requests %}
+<div class="post">
+  <img src="{{ url_for('static', filename='images/profile_photos/' + request.user_id.image_filename) if request.user_id.image_filename else app_config['DEFAULT_PROFILE_PHOTO_URL'] }}" alt="Profile Image" class="profile-image" onclick="enlargeImage(this.src)">
+  <h3 style="display: inline-block; font-size: 45px;">{{ user.username }}</h3>
+  <h4>{{ request.category }}</h4>
+  <p>{{ request.content }}</p>
+  {% if request.image_filename %}
+    <img src="{{ url_for('static', filename='images/requests/' + request.image_filename) }}" alt="Request Image" class="post-image" onclick="enlargeImage(this.src)">
+  {% endif %}
+  <a href="{{ url_for('request.view_request', request_id=request.id) }}">View Request</a>
+  <p>{{ request.created_at }}</p>
+</div>
+{% else %}
+<p style="color:grey;"><i>No requests yet!</i></p>
+{% endfor %}
+</div>
+</div>
 {% endblock %}
