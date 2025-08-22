@@ -1,31 +1,50 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Business Profile</h1>
-  <h2>{{ business.business_name }}</h2>
-  <p>Category: {{ business.category }}</p>
-  <p>Description: {{ business.description }}</p>
+<div class="text">
+<h1 style="text-align:center;">Business Profile</h1>
+<div class="user-profile">
+  <img src="{{ url_for('static', filename='images/businesses/' + business.image_filename) if business.image_filename else app_config['DEFAULT_BUSINESS_IMAGE_URL'] }}" alt="Business Image" class="profile" onclick="enlargeImage(this.src)">
+  <div class="user-info">
+    <h2>{{ business.business_name }}</h2>
+    <p>Category: {{ business.category }}</p>
+    <p>Description: {{ business.description }}</p>
+  </div>
+</div>
   <h2>Posts</h2>
+    {% if current_user.id == business.user_id %}
+      <p><a href="{{ url_for('business.create_post', business_id=business.id) }}">Create Post</a></p>  
+    {% endif %}
     {% for post in business.posts %}
     <div class="post">
-      <p>{{post.created_at}}</p>
+      <img src="{{ url_for('static', filename='images/businesses/' + business.image_filename) if business.image_filename else app_config['DEFAULT_BUSINESS_IMAGE_URL'] }}" alt="Business Image" class="profile-image" onclick="enlargeImage(this.src)">
+      <h3 style="display: inline-block; font-size: 45px;">{{ business.business_name }}</h3>
       <h3>{{post.title}}</h3>
       <p>{{post.content}}</p>
+      {% if post.image_filename %}
+          <img class="post-image" src="{{ url_for('static', filename='images/posts/' + post.image_filename) }}" alt="Post Image" onclick="enlargeImage(this.src)">
+        {% endif %}
+        <p>Likes: {{ post.engagements | selectattr('engagement_type', 'equalto', 'like') | list | length }}</p>
+        <p>Comments: {{ post.engagements | selectattr('engagement_type', 'equalto', 'comment') | list | length }}</p>
       <a href="{{ url_for('post.post_detail', post_id=post.id) }}">View details</a>
+      <p>{{ post.created_at }}</p>
     </div>
     {% endfor %}
   <h2>Reviews</h2>
   {% for review in reviews %}
   <div class="post">
-    <h3>{{ user.username }}</h3>
-    <p>{{ review.created_at }}</p>
+    <img src="{{ url_for('static', filename='images/profile_photos/' + review.user.image_filename) if review.user.image_filename else app_config['DEFAULT_PROFILE_PHOTO_URL'] }}" alt="Profile Image" class="profile-image" onclick="enlargeImage(this.src)">
+    <h3 style="display: inline-block; font-size: 45px;">{{ review.user.username }}</h3>
     <p>Rating: {{ review.rating }}</p>
     <p>Review: {{ review.review }}</p>
+    <p>{{ review.created_at }}</p>
     {% if review.user_id == current_user.id %}
-    <a href="{{ url_for('review.edit_review', review_id=review.id) }}">Edit Review</a>
-    <a href="{{ url_for('review.delete_review', review_id=review.id) }}" onclick="return confirm('Confirm delete')">Delete Review</a>
+    <p style="display: inline-block; font-size: 30px"><a href="{{ url_for('review.edit_review', review_id=review.id) }}">Edit Review</a></p>
+    <p style="display: inline-block; font-size: 30px; margin-left: 10%;"><a href="{{ url_for('review.delete_review', review_id=review.id) }}" onclick="return confirm('Confirm delete')">Delete Review</a></p>
     {% endif %}
   </div>
+  {% else %}
+  <p style="color:grey;"><i>No reviews yet!</i></p>
   {% endfor %}
   {% if current_user.id != business.user_id %}
   <p><a href="{{ url_for('message.view_conversation', user_id=business.user_id) }}">Message Business</a></p>
@@ -33,9 +52,9 @@
       <p><a href="{{ url_for('review.create_review', business_id=business.id) }}">Leave a Review</a></p>
       {% endif %}
   {% else %}
-  <p><a href="{{ url_for('business.create_post', business_id=business.id) }}">Create Post</a></p>
   <p><a href="{{ url_for('business.edit_business', business_id=business.id) }}">Edit Business</a></p>
   <p><a href="{{ url_for('business.delete_business', business_id=business.id) }}" onclick="return confirm('Confirm delete')">Delete Business</a></p>
   {% endif %}
   <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+</div>
 {% endblock %}
