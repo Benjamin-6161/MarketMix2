@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 style="font-size: 80px; text-align:center;">Edit Business</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.name.label(class="form-label") }}<br> {{ form.name(class="form-input") }}<br>
+        {{ form.category.label(class="form-label") }}<br> {{ form.category(class="form-input") }}<br>
+        {{ form.country.label(class="form-label") }}<br> {{ form.country(class="form-input") }}<br>
+        {{ form.state.label(class="form-label") }}<br> {{ form.state(class="form-input") }}<br>
+        {{ form.city.label(class="form-label") }}<br> {{ form.city(class="form-input") }}<br>
+        {{ form.description.label(class="form-label") }}<br> {{ form.description(class="form-input") }}<br>
+        {{ form.image.label(class="form-label") }}<br> {{ form.image(class="form-input") }}<br>
+        {{ form.submit(class="form-submit") }}
+    </form>
+</div>
+{% endblock %}
