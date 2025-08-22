@@ -1,51 +1,58 @@
 {% extends 'base.html' %}
-
+<div class="text">
 {% block content %}
 {% if current_user.is_authenticated %}
 <section>
-  <h1>Homepage</h1>
-  <div class="feed">
-    <h2>Businesses</h2>
-    {% for business in businesses %}
-      <div class="post">
-        <h3><a href="{{ url_for('business.business_profile', business_id=business.id) }}">{{business.business_name}}</a></h3>
-        <h4>{{ business.decription }}</h4>
-        <p>Location: {{business.state}}, {{business.country}}</p>
-      </div>
-    {% endfor %}
-</section><hr>
-<section>
-    <h2>Posts</h2>
+    <h2 style="font-size: 45px;">Posts</h2>
     {% for post in posts %}
     <div class="post">
-        <p>{{ post.created_at }}</p>
-        <h3><a href="{{ url_for('business.business_profile', business_id=post.business_id) }}">{{ post.business.business_name }}</a></h3>
+        <img src="{{ url_for('static', filename='images/businesses/' + post.business.image_filename) if post.business.image_filename else app_config['DEFAULT_BUSINESS_IMAGE_URL'] }}" alt="Business Image" class="profile-image" onclick="enlargeImage(this.src)">        
+        <h3 style="display: inline-block; font-size: 45px;"><a href="{{ url_for('business.business_profile', business_id=post.business_id) }}">{{ post.business.business_name }}</a></h3>
         <h4>{{ post.title }}</h4>
         <p>{{ post.content }}</p>
+        {% if post.image_filename %}
+          <img class="post-image" src="{{ url_for('static', filename='images/posts/' + post.image_filename) }}" alt="Post Image" onclick="enlargeImage(this.src)">
+        {% endif %}
         <p>Likes: {{ post.engagements | selectattr('engagement_type', 'equalto', 'like') | list | length }}</p>
         <p>Comments: {{ post.engagements | selectattr('engagement_type', 'equalto', 'comment') | list | length }}</p>
         <p><a href="{{ url_for('post.post_detail', post_id=post.id) }}">View Post</a></p>
+        <p>{{ post.created_at }}</p>
     </div>
     {% endfor %}
-</section><hr>
+</section>
 <section> 
-    <h2>Requests</h2>
+    <h2 style="font-size: 45px;">Requests</h2>
     {% for request in requests %}
       <div class="post">
-        <p>{{ request.created_at }}</p>
-        <h3>{{ request_users[request.id].username }}</h3>
+        <img src="{{ url_for('static', filename='images/profile_photos/' + request_users[request.id].image_filename) if request_users[request.id].image_filename else app_config['DEFAULT_PROFILE_PHOTO_URL'] }}" alt="Profile Image" class="profile-image" onclick="enlargeImage(this.src)">      
+        <h3 style="display: inline-block; font-size: 45px;">{{ request_users[request.id].username }}</h3>
         <h4>{{ request.category }}</h4>
         <p>{{ request.content }}</p>
+        {% if request.image_filename %}
+          <img class="post-image" src="{{ url_for('static', filename='images/requests/' + request.image_filename) }}" alt="Request Image" onclick="enlargeImage(this.src)">
+        {% endif %}
         <a href="{{ url_for('request.view_request', request_id=request.id) }}">View Request</a>
+        <p>{{ request.created_at }}</p>
       </div>
     {% endfor %}
-</section><hr>
+</section>
+<section>
+  <div class="feed">
+    <h2 style="font-size: 45px;">Businesses</h2>
+    {% for business in businesses %}
+      <div class="post">
+        <img src="{{ url_for('static', filename='images/businesses/' + business.image_filename) if business.image_filename else app_config['DEFAULT_BUSINESS_IMAGE_URL'] }}" alt="Business Image" class="profile-image" onclick="enlargeImage(this.src)">
+        <h3 style="display: inline-block; font-size: 45px; margin-top: 0px;"><a href="{{ url_for('business.business_profile', business_id=business.id) }}">{{business.business_name}}</a></h3>
+        <h4>{{ business.description }}</h4>
+        <p>Location: {{business.state}}, {{business.country}}</p>
+      </div>
+    {% endfor %}
+</section>
     <a href="{{ url_for('auth.logout') }}">Log out</a>
   </div>
 {% else %}
   <p><a href="{{ url_for('auth.login') }}">Login</a></p>
   <p><a href="{{ url_for('auth.register') }}">Register</a></p>
+</div>
 {% endif %}
-<!--  <p><a href="{{ url_for('user.profile') }}">Profile</a></p>
-  <p><a href="{{ url_for('message.inbox') }}">Inbox</a></p> -->
 {% endblock %}
