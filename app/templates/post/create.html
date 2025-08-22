@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h1>Create Post</h1>
-<form method="POST">
-  {{ form.hidden_tag() }}
-  {{ form.title.label }}{{ form.title() }}
-  {{ form.content.label }}{{ form.content() }}
-  {{ form.submit() }}
-</form>
+<div class="container">
+    <h1 style="font-size: 80px; text-align:center;">Create Post</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.title.label(class="form-label") }}<br> {{ form.title(class="form-input") }}<br>
+        {{ form.content.label(class="form-label") }}<br> {{ form.content(class="form-input") }}<br>
+        {{ form.image.label(class="form-label") }}<br> {{ form.image(class="form-input") }}<br>
+        {{ form.submit(class="form-submit") }}
+    </form>
+</div>
 {% endblock %}
