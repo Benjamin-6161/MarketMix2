@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Inbox</h1>
-        {% for partner, last_message in conversation_partners %}
-            <div class="post">
-                <h2>{{ partner.username }}</h2>
-                <p>{{ last_message.content }} ({{ last_message.created_at.strftime('%Y-%m-%d %H:%M:%S') }})</p>
-                <a href="{{ url_for('message.view_conversation', user_id=partner.id) }}">View Conversation</a>
-            <div>
-        {% endfor %}
-    </ul>
-    <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+  <h1 style="font-size: 50px;">Inbox</h1>
+    {% for partner, last_message in conversation_partners %}
+      <div class="post">
+        <img src="{{ url_for('static', filename='images/profile_photos/' + partner.image_filename) if partner.image_filename else app_config['DEFAULT_PROFILE_PHOTO_URL'] }}" alt="Profile Image" class="profile-image" onclick="enlargeImage(this.src)">
+        <h2 style="display: inline-block; font-size: 45px;">{{ partner.username }}</h2>
+        <p style="font-size: 30px;">{{ last_message.content }} ({{ last_message.created_at.strftime('%Y-%m-%d %H:%M:%S') }})</p>
+        <p style="font-size: 30px;"><a href="{{ url_for('message.view_conversation', user_id=partner.id) }}">View Conversation</a></p>
+      </div>
+    {% endfor %}
 {% endblock %}
