@@ -4,29 +4,41 @@
     <title>MarketMix</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+<div class="enlarged-image" id="enlarged-image">
+    <img src="" alt="Enlarged Image" id="enlarged-image-src">
+</div>
+
+<script>
+    function enlargeImage(src) {
+        document.getElementById('enlarged-image-src').src = src;
+        document.getElementById('enlarged-image').style.display = 'flex';
+    }
+
+    document.getElementById('enlarged-image').addEventListener('click', function() {
+        this.style.display = 'none';
+    });
+</script>
 <body>
     <header>MarketMix</header>
+    {% if not current_user.is_authenticated %}
+    {% else %}
     <nav>
-        <ul>
-            {% if not current_user.is_authenticated %}
-            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-            {% else %}
-            <li><a href="{{ url_for('main.homepage') }}">Home</a></li>
-            <li><a href="{{ url_for('user.profile') }}">Profile</a></li>
-            <li><a href="{{ url_for('message.inbox') }}">Inbox</a></li>
-            <li><a href="{{ url_for('request.create_request') }}">Create Request</a></li>
-            <li><a href="{{ url_for('main.posts') }}">Posts</a></li>
-            <li><a href="{{ url_for('main.requests') }}">Requests</a></li>
-            <li><a href="{{ url_for('main.businesses') }}">Businesses</a></li>
-            {% endif %}
-        </ul>
+       <ul>                       
+       <li><a href="{{ url_for('main.homepage') }}">Home</a></li>
+       <li><a href="{{ url_for('user.profile') }}">Profile</a></li>
+       <li><a href="{{ url_for('message.inbox') }}">Inbox</a></li>
+       <li><a href="{{ url_for('request.create_request') }}">Create Request</a></li>
+       <li><a href="{{ url_for('main.posts') }}">Posts</a></li>
+       <li><a href="{{ url_for('main.requests') }}">Requests</a></li>
+       <li><a href="{{ url_for('main.businesses') }}">Businesses</a></li>
+    {% endif %}
+       </ul>
     </nav>
     <div class="content">
         {% block content %}{% endblock %}
     </div>
     <footer>
-        <p>&copy;2025 MarketMix. All rights reserved </p>
+        <p style="text-align: center;">&copy;2025 MarketMix. All rights reserved </p>
     </footer>
 </body>
 </html>
