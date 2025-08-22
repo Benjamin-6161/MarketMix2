@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     state = db.Column(db.String(50), nullable=False, default='unknown')
     city = db.Column(db.String(50), nullable=False, default='unknown')
     is_active = db.Column(db.Boolean, nullable=False, default=True)
+    image_filename = db.Column(db.String(100), nullable=True, default='default_profile.jpg')
     businesses = db.relationship('Business', backref='user', lazy=True)
 
     def set_password(self, password):
