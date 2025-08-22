@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Create Request</h1>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.category.label }} {{ form.category() }} <br>
-    {{ form.content.label }} <br> {{ form.content() }}
-    <input type="submit" value="Submit Request">
-  </form>
-  <p><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
+<div class="container">
+    <h1 style="font-size: 80px; text-align:center;">Create Request</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.category.label(class="form-label") }}<br> {{ form.category(class="form-input") }}<br>
+        {{ form.content.label(class="form-label") }}<br> {{ form.content(class="form-input") }}<br>
+        {{ form.image.label(class="form-label") }}<br> {{ form.image(class="form-input") }}<br>
+        {{ form.submit(class="form-submit") }}
+    </form>
+</div>
+ <p style="font-size: 30px;"><a href="{{ url_for('main.homepage') }}">Back to Homepage</a></p>
 {% endblock %}
