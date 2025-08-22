@@ -7,3 +7,4 @@ class Review(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     review = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    user = db.relationship('User', backref=db.backref('reviews', lazy=True))
