@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from app.forms import LoginForm, RegisterForm, ForgotPasswordForm, ResetPasswordForm
 from app.models.user import User
-from app import db
-from werkzeug.security import generate_password_hash, check_password_hash
+from app import db, profile_photos
+from passlib.hash import bcrypt
 from flask_login import login_user, logout_user, login_required, current_user
 
 auth = Blueprint('auth', __name__)
@@ -12,10 +12,15 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password, form.password.data):
+        print(f"User: {user}")
+        print(f"Email:{user.email}")
+        print(f"Password: {user.password}")
+        if user and bcrypt.verify(form.password.data, user.password):
             login_user(user)
+            print("Login successful")
             return redirect(url_for('main.homepage'))
         else:
+            print("Login failed")
             flash('Invalid email or password', 'danger')
     return render_template('auth/login.html', form=form)
 
@@ -23,8 +28,20 @@ def login():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, user_type=form.user_type.data, country=form.country.data, state=form.state.data, city=form.city.data, is_active=True)
+        hashed_password = bcrypt.hash(form.password.data)
+        new_user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=hashed_password,
+            user_type=form.user_type.data,
+            country=form.country.data,
+            state=form.state.data,
+            city=form.city.data,
+            is_active=True
+        )
+        if form.image.data:
+            filename = profile_photos.save(form.image.data)
+            new_user.image_filename = filename
         db.session.add(new_user)
         db.session.commit()
         flash('Account created successfully', 'success')
@@ -56,4 +73,4 @@ def reset_password(token):
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.homepage'))
+    return redirect(url_for('auth.login'))
