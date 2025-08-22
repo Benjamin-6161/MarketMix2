@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Edit Request</h1>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.category.label }} {{ form.category() }}
-    {{ form.content.label }} {{ form.content() }}
-    {{ form.submit() }}
-  </form>
+<div class="container">
+    <h1 style="font-size: 80px; text-align:center;">Edit Request</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.category.label(class="form-label") }} {{ form.category(class="form-input") }}
+        {{ form.content.label(class="form-label") }} {{ form.content(class="form-input") }}
+        {{ form.image.label(class="form-label") }} {{ form.image(class="form-input") }}
+        {% if request.image_filename %}
+          <img src="{{ url_for('static', filename='images/requests/' + request.image_filename) }}" alt="Request Image" style="width: 80%; margin-left: 10%;" class="post-image" onclick="enlargeImage(this.src)">
+        {% endif %}
+        {{ form.submit(class="form-submit") }}
+    </form>
+</div>
 {% endblock %}
