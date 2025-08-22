@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, current_app
 from app.models.post import Post
 from app.models.engagement import Engagement
 from app import db
+from app.uploads import post_images
 from app.forms import PostForm
 from app.forms import EngagementForm
 from flask_login import login_required, current_user
+from app.models.business import Business
 
 post = Blueprint('post', __name__)
 
@@ -22,8 +24,8 @@ def post_detail(post_id):
         db.session.add(engagement)
         db.session.commit()
         return redirect(url_for('post.post_detail', post_id=post_id))
-    return render_template('post/detail.html', post=post, form=form)
-    
+    return render_template('post/detail.html', post=post, form=form, app_config=current_app.config)
+
 @post.route('/<int:post_id>/like')
 @login_required
 def like_post(post_id):
@@ -37,7 +39,6 @@ def like_post(post_id):
             engagement_type='like'
         )
         db.session.add(engagement)
-
     db.session.commit()
     return redirect(url_for('post.post_detail', post_id=post_id))
 
@@ -51,6 +52,9 @@ def edit_post(post_id):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        if form.image.data:
+            filename = post_images.save(form.image.data)
+            post.image_filename = filename
         db.session.commit()
         return redirect(url_for('post.post_detail', post_id=post_id))
     return render_template('post/edit.html', form=form, post=post)
@@ -66,7 +70,7 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     return redirect(url_for('business.business_posts', business_id=post.business_id))
-    
+
 @post.route('/<int:post_id>/<int:engagement_id>/delete')
 @login_required
 def delete_comment(post_id, engagement_id):
@@ -75,3 +79,18 @@ def delete_comment(post_id, engagement_id):
         db.session.delete(comment)
         db.session.commit()
     return redirect(url_for('post.post_detail', post_id = post_id))
+
+@post.route('/create/<int:business_id>', methods=['GET', 'POST'])
+@login_required
+def create_post(business_id):
+    form = PostForm()
+    business = Business.query.get(business_id)
+    if form.validate_on_submit():
+        new_post = Post(title=form.title.data, content=form.content.data, business_id=business_id)
+        if form.image.data:
+            filename = post_images.save(form.image.data)
+            new_post.image_filename = filename
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('main.homepage'))
+    return render_template('post/create.html', form=form, business=business)
