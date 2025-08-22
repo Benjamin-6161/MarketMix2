@@ -9,6 +9,6 @@ class Business(db.Model):
     state = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text, nullable=True)
+    image_filename = db.Column(db.String(100), nullable=True)
     created_at = db.Column(db.DateTime, nullable=True, default=db.func.current_timestamp())
-#    profile_picture = db.Column(db.String(100), nullable=True)
     posts = db.relationship('Post', backref='business', lazy=True)
